@@ -1,82 +1,42 @@
-version: 0.0.1.beta-{build}
 
--
-  version: 0.0.1.{build}
+version: 0.0.1.{build}
 
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
+init:
+- ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
-  configuration:
-  - Release
-  platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
 
-  pull_requests:  
-    do_not_increment_build_number: true
+configuration:
+- Release
+platform: Any CPU
 
-  branches:  
-    only:
-    - master
+pull_requests:  
+  do_not_increment_build_number: true
 
-  nuget:  
-    disable_publish_on_pr: true
+branches:  
+  only:
+  - master
+  - release
 
-  test: off
+nuget:  
+  disable_publish_on_pr: true
 
-  init:
-  - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
+test: off
 
-  before_build:
-  - appveyor-retry dotnet restore -v Minimal
 
-  build_script:
-  - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+before_build:
+- appveyor-retry dotnet restore -v Minimal
 
-  after_build:
-  - dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o artifacts
+build_script:
+- dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
 
-  artifacts:
-  - path: artifacts\**\*.*
+after_build:
+- dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o artifacts
 
-### RELEASE BUILDS ###
--
-  version: 0.0.1
-
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-
-  configuration:
-  - Release
-  platform: Any CPU
-
-  pull_requests:  
-    do_not_increment_build_number: true
-
-  branches:  
-    only:
-    - release
-
-  nuget:  
-    disable_publish_on_pr: true
-
-  test: on
-
-  before_build:
-  - appveyor-retry dotnet restore -v Minimal
-
-  build_script:
-  - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies 
-
-  after_build:
-  - dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build -o artifacts
-
-  artifacts:
-  - path: artifacts\**\*.*
-
+artifacts:
+- path: artifacts\**\*.*
