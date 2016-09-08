@@ -16,9 +16,9 @@ $projects = @(
     #,(Test ".\src\Tests")
 )
 
-if (Test-Path -Path .\global.json)
+if (Test-Path -Path .\src\global.json)
 {
-    $conf = Get-Content -Path .\global.json -Raw | ConvertFrom-Json
+    $conf = Get-Content -Path .\src\global.json -Raw | ConvertFrom-Json
     Write-Verbose "Using dotnet core version $($conf.sdk.version)"
 }
 else
