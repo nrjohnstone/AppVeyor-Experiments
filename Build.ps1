@@ -23,7 +23,7 @@ if (Test-Path -Path .\global.json)
 }
 else
 {
-    throw "No global.json found in project directory"
+    #throw "No global.json found in project directory"
 }
 
 #==============================================================
