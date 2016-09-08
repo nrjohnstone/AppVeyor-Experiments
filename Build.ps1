@@ -123,8 +123,6 @@ $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BU
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 "REVISION: " + $revision
 
-$env:APPVEYOR_BUILD_VERSION=0.1.1
-
 # Run tests
 foreach ($project in $projects) {
     if($project.Item2 -eq "Test")
