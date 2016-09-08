@@ -1,5 +1,5 @@
 
-version: 0.0.1.{build}
+version: 0.0.2.{build}
 
 init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
@@ -27,7 +27,6 @@ nuget:
   disable_publish_on_pr: true
 
 test: off
-
 
 before_build:
 - appveyor-retry dotnet restore -v Minimal
