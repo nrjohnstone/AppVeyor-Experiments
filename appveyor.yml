@@ -32,8 +32,8 @@ before_build:
 build_script:
 - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
 
+artifacts:
+- path: artifacts\**\*.*
 
-artifacts:  
-- path: .\artifacts\**\*.nupkg
-  name: NuGet
-
+cache:
+- '%USERPROFILE%\.nuget\packages'
