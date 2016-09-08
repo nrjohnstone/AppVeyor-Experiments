@@ -12,7 +12,7 @@ nuget:
 
 test: off
 
-before_build:
+build:
 - ps: .\Build.ps1
 
 artifacts:  

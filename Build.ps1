@@ -12,8 +12,7 @@ function Test{Param([Parameter(Position=0,Mandatory=$true)][String] $path)return
 # + Test - `restore` & `build` & `test` run but not `pack`
 #==============================================================
 $projects = @(
-    (Nuget ".\src\AppVeyorExperiments") 
-    #,(Test ".\src\Tests")
+    (Nuget ".\src\AppVeyorExperiments")
 )
 
 if (Test-Path -Path .\src\global.json)
@@ -107,6 +106,41 @@ function Header{
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 EnsureDotnetCliInstalled
+EnsurePsbuildInstalled
+
+# Package and Build
+foreach ($project in $projects) {
+    Header " RESTORING $project"
+    Exec { & dotnet restore $project.Item1 }
+
+    Header " BUILDING $project"
+    Exec { & dotnet build $project.Item1 }
+}
+
+# Get Revision
+Header " CHECK REVISION"
+$revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+$revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
+"REVISION: " + $revision
+
+$env:APPVEYOR_BUILD_VERSION=0.1.1
+
+# Run tests
+foreach ($project in $projects) {
+    if($project.Item2 -eq "Test")
+    {
+        Header " RUNNING TESTS FOR $project"
+        Exec { & dotnet test $project.Item1 -c Release }
+    }
+}
+
+foreach ($project in $projects) {
+    if($project.Item2 -eq "Nuget")
+    {
+        Header " PACKAGING FOR $project"
+        Exec { & dotnet pack $project.Item1 -c Release -o .\artifacts --version-suffix="beta-$revision" } 
+    }
+}
 
 Header "++++++++++++++++++++++++++++ DONE ++++++++++++++++++++++++++++"
 Yellow "=============================================================="
