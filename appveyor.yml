@@ -39,3 +39,44 @@
   artifacts:
   - path: artifacts\**\*.*
 
+-
+  version: 0.0.1
+
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+
+  configuration:
+  - Release
+  platform: Any CPU
+
+  pull_requests:  
+    do_not_increment_build_number: true
+
+  branches:  
+    only:
+    - release
+
+  nuget:  
+    disable_publish_on_pr: true
+
+  test: off
+
+  init:
+  - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
+
+  before_build:
+  - appveyor-retry dotnet restore -v Minimal
+
+  build_script:
+  - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+
+  after_build:
+  - dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o artifacts
+
+  artifacts:
+  - path: artifacts\**\*.*
+
