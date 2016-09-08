@@ -65,17 +65,14 @@
 
   test: off
 
-  init:
-  - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
-
   before_build:
   - appveyor-retry dotnet restore -v Minimal
 
   build_script:
-  - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "src\AppVeyorExperiments" -c %CONFIGURATION% --no-dependencies 
 
   after_build:
-  - dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o artifacts
+  - dotnet pack "src\AppVeyorExperiments" -c %CONFIGURATION% --no-build -o artifacts
 
   artifacts:
   - path: artifacts\**\*.*
