@@ -12,8 +12,8 @@ function Test{Param([Parameter(Position=0,Mandatory=$true)][String] $path)return
 # + Test - `restore` & `build` & `test` run but not `pack`
 #==============================================================
 $projects = @(
-    (Nuget ".\src\AppVeyorExperiment"), 
-    (Test ".\src\Tests")
+    (Nuget ".\src\AppVeyorExperiments") 
+    #,(Test ".\src\Tests")
 )
 
 if (Test-Path -Path .\global.json)
