@@ -3,7 +3,8 @@ version: 0.0.2.{build}
 
 init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
-- ps: Update-AppveyorBuild -Version "1.$(Get-Date -format yyyy.M).$env:appveyor_build_number"
+- ps: ./SetVersion.ps1
+#- ps: Update-AppveyorBuild -Version "1.$(Get-Date -format yyyy.M).$env:appveyor_build_number"
 
 assembly_info:
   patch: true
