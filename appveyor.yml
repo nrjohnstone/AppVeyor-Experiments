@@ -39,6 +39,7 @@
   artifacts:
   - path: artifacts\**\*.*
 
+### RELEASE BUILDS ###
 -
   version: 0.0.1
 
@@ -63,7 +64,7 @@
   nuget:  
     disable_publish_on_pr: true
 
-  test: off
+  test: on
 
   before_build:
   - appveyor-retry dotnet restore -v Minimal
